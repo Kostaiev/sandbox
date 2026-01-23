@@ -4,7 +4,7 @@ Learning Spring Boot application for experimenting with AI providers using Sprin
 
 The goal of this project is to try connecting to:
 - OpenAI (cloud)
-- Ollama (local / docker)
+- Ollama (docker)
 - AWS Bedrock (cloud)
 
 via a simple REST API.
@@ -37,11 +37,26 @@ Required environment variable:
 ```bash
 export OPENAI_API_KEY=your_api_key_here
 ```
+### Ollama
+[ollama/ollama](https://github.com/ollama/ollama?tab=readme-ov-file)
+
+Uses `spring-ai-starter-model-ollama`
+
+Required environment variable:
+```bash
+export OLLAMA_MODEL=your_model_here
+
+export OLLAMA_BASE_URL=your_url_here
+```
 Running locally:
 `mvn spring-boot:run`
 
 Test with cURL:
 ```bash
-curl -G "http://localhost:8080/api/ask" \
+curl -G "http://localhost:8080/api/ask/openai" \
+  --data-urlencode "question=Who are you?"
+```
+```bash
+curl -G "http://localhost:8080/api/ask/ollama" \
   --data-urlencode "question=Who are you?"
 ```
