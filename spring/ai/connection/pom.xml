@@ -5,27 +5,20 @@
 
     <parent>
         <groupId>com.sandbox</groupId>
-        <artifactId>sandbox</artifactId>
+        <artifactId>ai</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <modules>
-        <module>ai</module>
-    </modules>
+    <artifactId>connection</artifactId>
+    <name>ai-connection</name>
+    <description>Demo project for Spring AI</description>
 
-    <artifactId>spring</artifactId>
-    <packaging>pom</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
+        </dependency>
+    </dependencies>
 
-    <name>spring</name>
-
-    <properties>
-
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-
-        </dependencies>
-    </dependencyManagement>
 </project>
