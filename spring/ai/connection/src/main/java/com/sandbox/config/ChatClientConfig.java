@@ -1,5 +1,6 @@
 package com.sandbox.config;
 
+import org.springframework.ai.bedrock.converse.BedrockProxyChatModel;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
@@ -18,6 +19,11 @@ public class ChatClientConfig {
     @Bean("ollama")
     public ChatClient ollama(OllamaChatModel ollamaChatModel) {
         return ChatClient.builder(ollamaChatModel).build();
+    }
+
+    @Bean("bedrock")
+    ChatClient bedrock(BedrockProxyChatModel model) { // Bedrock Converse
+        return ChatClient.create(model);
     }
 
 }

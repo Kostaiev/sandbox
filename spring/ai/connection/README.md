@@ -48,6 +48,22 @@ export OLLAMA_MODEL=your_model_here
 
 export OLLAMA_BASE_URL=your_url_here
 ```
+### Amazon Bedrock
+[Amazon Bedrock](https://aws.amazon.com/bedrock/)
+
+Uses `spring-ai-starter-model-bedrock-converse`
+
+Required environment variable:
+```bash
+export AWS_REGIONL=your_aws_region_here
+
+export AWS_ACCESS_KEY=your_aws_iam_access_key
+
+export AWS_SECRET_KEY=your_aws_iam_secret_key
+
+export AWS_AI_MODEL=your_aws_ai_model
+```
+
 Running locally:
 `mvn spring-boot:run`
 
@@ -58,5 +74,9 @@ curl -G "http://localhost:8080/api/ask/openai" \
 ```
 ```bash
 curl -G "http://localhost:8080/api/ask/ollama" \
+  --data-urlencode "question=Who are you?"
+```
+```bash
+curl -G "http://localhost:8080/api/ask/bedrock" \
   --data-urlencode "question=Who are you?"
 ```
