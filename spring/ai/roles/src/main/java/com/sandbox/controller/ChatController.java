@@ -18,14 +18,14 @@ public class ChatController {
 
     @GetMapping("/openai")
     public String askOpenAi(@RequestParam("question") String question) {
-        log.info("GET /ask/openai: received question: {}", question);
+        log.info("GET /openai: received question: {}", question);
         var answer = openAiChatClient.prompt()
                 .system("""
-                Act as a professional chef. 
-                Give clear, step-by-step recipes and kitchen techniques.""")
+                        You are an assistant that must answer every question using only emoji\s
+                        Do not add explanations, punctuation, or extra words.""")
                 .user(question)
                 .call().content();
-        log.info("GET /ask/openai: generated answer: {}", answer);
+        log.info("GET /openai: generated answer: {}", answer);
         return answer;
     }
 }

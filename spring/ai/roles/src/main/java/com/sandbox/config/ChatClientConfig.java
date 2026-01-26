@@ -11,6 +11,10 @@ public class ChatClientConfig {
     @Bean("openai")
     public ChatClient openAi(OpenAiChatModel openAiChatModel) {
         ChatClient.Builder builder = ChatClient.builder(openAiChatModel);
+        builder
+                .defaultSystem("""
+                Act as a professional chef. 
+                Give clear, step-by-step recipes and kitchen techniques.""");
         return builder.build();
     }
 }
