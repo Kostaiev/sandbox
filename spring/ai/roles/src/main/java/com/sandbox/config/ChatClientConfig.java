@@ -1,6 +1,7 @@
 package com.sandbox.config;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ public class ChatClientConfig {
     public ChatClient openAi(OpenAiChatModel openAiChatModel) {
         ChatClient.Builder builder = ChatClient.builder(openAiChatModel);
         builder
+                .defaultAdvisors(new SimpleLoggerAdvisor())
                 .defaultSystem("""
                 Act as a professional chef. 
                 Give clear, step-by-step recipes and kitchen techniques.""")
