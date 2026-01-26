@@ -47,3 +47,9 @@ Test with cURL:
 curl -G "http://localhost:8080/api/openai" \
   --data-urlencode "question=What do you do?"
 ```
+
+```bash
+curl -G "http://localhost:8080/api/HR/message" \
+--data-urlencode "userName=Antonio" \
+--data-urlencode "message=I want to do more?"
+```
