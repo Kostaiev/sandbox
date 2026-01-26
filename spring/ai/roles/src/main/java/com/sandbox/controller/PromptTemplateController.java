@@ -3,6 +3,8 @@ package com.sandbox.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,16 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PromptTemplateController {
     private final ChatClient openAiChatClient;
-    private String promptTemplate = """
-            You are an HR assistant helping to interpret messages sent by an employee.\s
-            Employee name: {userName}\s
-            Message from the employee:\s
-            "{message}"\s
-            Respond according to the system instructions provided.""";
+
+    @Value("classpath:/promptTemplates/userPromptTemplate.st")
+    private Resource promptTemplate;
 
     @GetMapping("/HR/message")
     public String messageResponseHelper(@RequestParam("userName") String userName,
-                                  @RequestParam("message") String message) {
+                                        @RequestParam("message") String message) {
         log.info("GET /HR/message: received message: {}, from: {}", message, userName);
         var answer = openAiChatClient.prompt()
                 .system("""
