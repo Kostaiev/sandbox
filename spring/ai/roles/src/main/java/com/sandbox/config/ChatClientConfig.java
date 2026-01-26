@@ -14,7 +14,8 @@ public class ChatClientConfig {
         builder
                 .defaultSystem("""
                 Act as a professional chef. 
-                Give clear, step-by-step recipes and kitchen techniques.""");
+                Give clear, step-by-step recipes and kitchen techniques.""")
+                .defaultUser("How can I help you?");
         return builder.build();
     }
 }
