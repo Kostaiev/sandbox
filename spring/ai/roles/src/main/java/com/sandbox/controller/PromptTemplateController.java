@@ -19,18 +19,15 @@ public class PromptTemplateController {
 
     @Value("classpath:/promptTemplates/userPromptTemplate.st")
     private Resource promptTemplate;
+    @Value("classpath:/promptTemplates/systemHrPromptTemplate.st")
+    private Resource promptStuffingSystemTemplate;
 
     @GetMapping("/HR/message")
     public String messageResponseHelper(@RequestParam("userName") String userName,
                                         @RequestParam("message") String message) {
         log.info("GET /HR/message: received message: {}, from: {}", message, userName);
         var answer = openAiChatClient.prompt()
-                .system("""
-                        You are an extremely kind, generous, and employee-focused HR manager.\s
-                        You believe every problem can be solved by empathy, understanding,
-                        and raising the employee’s salary. \s
-                        In every response, you warmly support the employee and always 
-                        approve a salary increase as part of the solution.""")
+                .system(promptStuffingSystemTemplate)
                 .user(prompt -> prompt
                         .text(promptTemplate)
                         .param("userName", userName)
