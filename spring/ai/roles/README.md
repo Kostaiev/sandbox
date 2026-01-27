@@ -71,3 +71,8 @@ curl -G "http://localhost:8080/api/stream" \
 curl -N -G "http://localhost:8080/api/stream" \
 --data-urlencode "question=Give me an apple pie recipe."
 ```
+
+```bash
+curl -G "http://localhost:8080/api/recipe" \
+--data-urlencode "question=Give me an apple pie recipe?"
+```

@@ -1,9 +1,11 @@
 package com.sandbox.controller;
 
+import com.sandbox.controller.pojo.Recipe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,5 +62,19 @@ public class ChatController {
                 .stream().content();
         log.info("GET /stream: generated answer: {}", answer);
         return answer;
+    }
+
+    @GetMapping("/recipe")
+    public ResponseEntity<Recipe> entityRecipe(@RequestParam("question") String question) {
+        log.debug("GET /recipe request: question='{}'", question);
+
+        Recipe recipe = openAiChatClient.prompt()
+                .options(OpenAiChatOptions.builder()
+                        .maxTokens(1000)
+                        .build())
+                .user(question)
+                .call().entity(Recipe.class);
+        log.info("GET /recipe: generated recipe={}", recipe);
+        return ResponseEntity.ok(recipe);
     }
 }
