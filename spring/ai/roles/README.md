@@ -53,3 +53,11 @@ curl -G "http://localhost:8080/api/HR/message" \
 --data-urlencode "userName=Antonio" \
 --data-urlencode "message=I want to do more?"
 ```
+
+What sampling temperature to use, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+
+```bash
+curl -G "http://localhost:8080/api/options" \
+--data-urlencode "question=Describe an apple in one sentence." \
+--data-urlencode "temperature=1.0"
+```
