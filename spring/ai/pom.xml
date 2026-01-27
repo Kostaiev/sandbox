@@ -12,6 +12,7 @@
 
     <modules>
         <module>connection</module>
+        <module>roles</module>
     </modules>
 
     <artifactId>ai</artifactId>
