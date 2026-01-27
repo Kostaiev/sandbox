@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 
 @Slf4j
@@ -50,5 +51,14 @@ public class ChatController {
         return answer;
     }
 
+    @GetMapping("/stream")
+    public Flux<String> stream(@RequestParam("question") String question) {
+        log.debug("GET /stream request: question='{}'", question);
 
+        var answer = openAiChatClient.prompt()
+                .user(question)
+                .stream().content();
+        log.info("GET /stream: generated answer: {}", answer);
+        return answer;
+    }
 }

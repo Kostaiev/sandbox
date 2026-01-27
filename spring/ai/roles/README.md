@@ -61,3 +61,13 @@ curl -G "http://localhost:8080/api/options" \
 --data-urlencode "question=Describe an apple in one sentence." \
 --data-urlencode "temperature=1.0"
 ```
+
+```bash
+curl -G "http://localhost:8080/api/stream" \
+--data-urlencode "message=What do you do?"
+```
+
+```bash
+curl -N -G "http://localhost:8080/api/stream" \
+--data-urlencode "question=Give me an apple pie recipe."
+```
