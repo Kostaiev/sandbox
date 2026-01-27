@@ -4,13 +4,19 @@ import com.sandbox.controller.pojo.Recipe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.converter.ListOutputConverter;
+import org.springframework.ai.converter.MapOutputConverter;
 import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -65,15 +71,21 @@ public class ChatController {
     }
 
     @GetMapping("/recipe")
-    public ResponseEntity<Recipe> entityRecipe(@RequestParam("question") String question) {
+    public ResponseEntity<List<Recipe>> entityRecipe(@RequestParam("question") String question) {
         log.debug("GET /recipe request: question='{}'", question);
 
-        Recipe recipe = openAiChatClient.prompt()
+        var recipe = openAiChatClient.prompt()
                 .options(OpenAiChatOptions.builder()
                         .maxTokens(1000)
                         .build())
                 .user(question)
-                .call().entity(Recipe.class);
+                //  Use ParameterizedTypeReference to preserve generic type information (List<Recipe>)
+                //  Required due to Java type erasure when mapping structured LLM output
+                .call().entity(new ParameterizedTypeReference<List<Recipe>>() {});
+
+//        Alternative output converters:
+//        entity(new ListOutputConverter()) -> List<String>         (raw list items, no structure)
+//        entity(new MapOutputConverter()) -> Map<String, Object>   (generic JSON-like structure)
         log.info("GET /recipe: generated recipe={}", recipe);
         return ResponseEntity.ok(recipe);
     }
