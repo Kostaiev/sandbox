@@ -2,7 +2,7 @@
 
 Learning Spring Boot application for experimenting with AI providers using Spring AI.
 
-The goal of this project is to try set message roles in LLM to:
+The goal of this project is to try set message roles and prompt control in LLM to:
 - OpenAI (cloud)
 
 via a simple REST API.
