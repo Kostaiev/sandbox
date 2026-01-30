@@ -1,6 +1,7 @@
 .idea
 **/*.iml
 **/target
+**/data
 
 ### VS Code ###
 .vscode/
