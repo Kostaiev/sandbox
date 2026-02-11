@@ -12,6 +12,8 @@
 
     <modules>
         <module>ai</module>
+        <module>admin</module>
+        <module>monitoring-client-starter</module>
     </modules>
 
     <artifactId>spring</artifactId>
