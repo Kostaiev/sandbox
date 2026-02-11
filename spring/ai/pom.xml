@@ -14,6 +14,8 @@
         <module>connection</module>
         <module>roles</module>
         <module>memory</module>
+        <module>rag</module>
+        <module>../monitoring-client-starter</module>
     </modules>
 
     <artifactId>ai</artifactId>
@@ -25,6 +27,7 @@
         <spring-ai.version>1.1.2</spring-ai.version>
         <logback.version>1.5.25</logback.version>
         <com.h2database>2.3.232</com.h2database>
+        <slf4j.version>2.0.17</slf4j.version>
     </properties>
 
     <dependencyManagement>
@@ -48,7 +51,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.17</version>
+            <version>${slf4j.version}</version>
             <scope>compile</scope>
         </dependency>
 
