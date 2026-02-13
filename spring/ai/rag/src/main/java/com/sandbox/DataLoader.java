@@ -3,6 +3,9 @@ package com.sandbox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.reader.tika.TikaDocumentReader;
+import org.springframework.ai.transformer.splitter.TextSplitter;
+import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -16,12 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.IntStream;
 
 @Slf4j
 @Component
@@ -30,8 +28,11 @@ public class DataLoader {
     private final VectorStore vectorStore;
 
     @Value("${path.data.txt.resource}")
-    private Resource data;
-    private AtomicLong lineNo = new AtomicLong(0);
+    private Resource dataTxt;
+
+    @Value("${path.data.pdf.resource}")
+    private Resource dataPdf;
+
 
     @EventListener(ApplicationReadyEvent.class)
     @Retryable(
@@ -45,31 +46,25 @@ public class DataLoader {
     public void loadDataIntoVectorStore() throws IOException {
         log.info("DataLoader: loading documents into VectorStore...");
         try (var buffer = new BufferedReader(
-                new InputStreamReader(data.getInputStream(), StandardCharsets.UTF_8))) {
+                new InputStreamReader(dataTxt.getInputStream(), StandardCharsets.UTF_8))) {
+            TikaDocumentReader tikaPdfDocumentReader = new TikaDocumentReader(dataPdf);
+            List<Document> pdfDocs = tikaPdfDocumentReader.get();
+            TextSplitter textSplitter =
+                    TokenTextSplitter.builder()
+                            .withChunkSize(50)
+                            .withMinChunkSizeChars(100)
+                            .withMinChunkLengthToEmbed(200)
+                            .withKeepSeparator(true)
+                            .build();
+            List<Document> pdf = textSplitter.split(pdfDocs);
+            vectorStore.add(pdf);
 
-            List<Document> docs = buffer.lines()
-                    .flatMap(line -> {
-                        long ln = lineNo.incrementAndGet();
-                        String[] sentences = line.split("(?<=[.!?])\\s+");
+            TikaDocumentReader tikaTxtDocumentReader = new TikaDocumentReader(dataTxt);
+            List<Document> txtDocs = tikaTxtDocumentReader.get();
+            List<Document> txt = textSplitter.split(txtDocs);
+            vectorStore.add(txt);
 
-                        return IntStream.range(0, sentences.length)
-                                .mapToObj(i -> {
-                                    String text = sentences[i].trim();
-                                    if (text.isBlank()) return null;
-
-                                    Map<String, Object> meta = new HashMap<>();
-                                    meta.put("source", data.getFilename());
-                                    meta.put("line", ln);
-                                    meta.put("sentenceIndex", i);
-                                    meta.put("chunkId", data.getFilename() + ":" + ln + ":" + i);
-
-                                    return new Document(text, meta);
-                                })
-                                .filter(Objects::nonNull);
-                    })
-                    .toList();
-            vectorStore.add(docs);
-            log.info("DataLoader: loaded {} documents", docs.size());
+            log.info("DataLoader: loaded {} documents", pdf.size() + txt.size());
         }
 
     }
