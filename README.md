@@ -1,4 +1,5 @@
 # Sandbox
+![sandbox ing](sandbox.png)
 
 Learning playground for small experiments, snippets, and quick prototypes.
 
